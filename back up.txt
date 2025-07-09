@@ -1,3 +1,39 @@
+docker compose down
+docker compose up --build
+html back up: <!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Estudiantes</title>
+    <link rel="stylesheet" href="styles_modern.css" />
+  </head>
+  <body>
+    <h1>Lista de Estudiantes</h1>
+<div>
+  <input type="text" id="nameInput" placeholder="Escribí tu nombre" />
+  <button id="greetButton">Saludame</button>
+  <p id="greetMessage"></p>
+</div>
+<h2>Agregar Estudiante</h2>
+<form id="addStudentForm">
+  <input type="text" id="studentName" placeholder="Nombre del Estudiante" required />
+  <button type="submit">Agregar Estudiante</button>
+</form>
+
+<button id="loadButton">Cargar Estudiantes</button>
+    <table id="studentsTable">
+      <thead>
+        <tr>
+          <th>Id</th>
+          <th>Nombre</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+    <script src="script.js"></script>
+  </body>
+</html>
+script.js: 
 document.getElementById("loadButton").addEventListener("click", async () => {
   const response = await fetch("/api/students");
   const students = await response.json();
@@ -9,7 +45,6 @@ document.getElementById("loadButton").addEventListener("click", async () => {
     tbody.appendChild(row);
   });
 });
-
 document.getElementById("greetButton").addEventListener("click", async () => {
   const name = document.getElementById("nameInput").value;
   try {
@@ -22,12 +57,11 @@ document.getElementById("greetButton").addEventListener("click", async () => {
 });
 
 document.getElementById("addStudentForm").addEventListener("submit", async (event) => {
-  event.preventDefault(); 
+  event.preventDefault();
 
   const name = document.getElementById("studentName").value;
 
   try {
-  
     const response = await fetch("/students", {
       method: "POST",
       headers: {
@@ -42,7 +76,7 @@ document.getElementById("addStudentForm").addEventListener("submit", async (even
 
       document.getElementById("studentName").value = "";
 
-      loadStudents(); 
+      loadStudents();
     } else {
       const error = await response.json();
       alert(`Error: ${error.error}`);
@@ -57,8 +91,7 @@ async function loadStudents() {
   const response = await fetch("/api/students");
   const students = await response.json();
   const tbody = document.querySelector("#studentsTable tbody");
-  tbody.innerHTML = ""; 
-
+  tbody.innerHTML = "";
   students.forEach((student) => {
     const row = document.createElement("tr");
     row.innerHTML = `<td>${student.id}</td><td>${student.name}</td>`;
